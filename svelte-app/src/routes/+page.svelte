@@ -59,12 +59,10 @@
   let isDeleting = false;
   let showCursor = true;
   
-  const roles = [
-    'Full Stack Developer',
-    'UI/UX Designer', 
-    'Problem Solver',
-    'Creative Thinker'
-  ];
+  let roles: string[] = [];
+  $: roles = lang === 'FA'
+    ? ['توسعه‌دهنده فول‌استک', 'طراح UI/UX', 'حل‌کننده مسئله', 'تفکر خلاق']
+    : ['Full Stack Developer', 'UI/UX Designer', 'Problem Solver', 'Creative Thinker'];
   
   onMount(() => {
     // Typing animation
@@ -114,13 +112,77 @@
     const el = document.getElementById('projects');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   }
+
+  let lang: 'EN' | 'FA' = 'EN';
+
+  interface Translation {
+    home: string;
+    about: string;
+    projects: string;
+    skills: string;
+    contact: string;
+    greeting: string;
+    hireMe: string;
+    viewWork: string;
+    getInTouch: string;
+    description: string;
+    projectsStat: string;
+    yearsStat: string;
+    satisfactionStat: string;
+    scroll: string;
+  }
+
+  const translations: Record<'EN' | 'FA', Translation> = {
+    EN: {
+      home: "Home",
+      about: "About",
+      projects: "Projects",
+      skills: "Skills",
+      contact: "Contact",
+      greeting: "Hello, I'm",
+      hireMe: "Hire Me",
+      viewWork: "View My Work",
+      getInTouch: "Get In Touch",
+      description: "I create beautiful, functional, and user-centered digital experiences. Passionate about turning ideas into reality through clean code and innovative design.",
+      projectsStat: "Projects",
+      yearsStat: "Years Experience",
+      satisfactionStat: "Client Satisfaction",
+      scroll: "Scroll to explore"
+    },
+    FA: {
+      home: "خانه",
+      about: "درباره",
+      projects: "پروژه‌ها",
+      skills: "مهارت‌ها",
+      contact: "تماس",
+      greeting: "سلام، من",
+      hireMe: "استخدام من",
+      viewWork: "نمونه کارها",
+      getInTouch: "ارتباط با من",
+      description: "من تجربه‌های دیجیتال زیبا، کاربردی و کاربرمحور خلق می‌کنم. مشتاق تبدیل ایده‌ها به واقعیت با کدنویسی تمیز و طراحی نوآورانه هستم.",
+      projectsStat: "پروژه",
+      yearsStat: "سال تجربه",
+      satisfactionStat: "رضایت مشتری",
+      scroll: "برای مشاهده بیشتر اسکرول کنید"
+    }
+  };
+
+  // Reactive statement to update document's dir attribute based on lang
+  $: {
+    if (typeof window !== 'undefined') {
+      document.documentElement.dir = lang === 'FA' ? 'rtl' : 'ltr';
+    }
+  }
+
+  $: isRtl = lang === 'FA';
 </script>
-<body>
+
+<body class:rtl-mode={isRtl}>
   <div></div>
 </body>
 
-<!-- Add this header right after your opening <body> tag and before the hero section -->
-<header class="header" class:scrolled={isScrolled}>
+<!-- Header section -->
+<header class="header ltr-header" class:scrolled={isScrolled}>
   <nav class="nav-container">
     <!-- Logo/Brand -->
     <div class="logo">
@@ -132,26 +194,31 @@
 
     <!-- Desktop Navigation -->
     <ul class="nav-links">
-      <li><a href="#home" class="nav-link">Home</a></li>
-      <li><a href="#about" class="nav-link">About</a></li>
-      <li><a href="#projects" class="nav-link">Projects</a></li>
-      <li><a href="#skills" class="nav-link">Skills</a></li>
-      <li><a href="#contact" class="nav-link">Contact</a></li>
+      <li><a href="#home" class="nav-link">{translations[lang].home}</a></li>
+      <li><a href="#about" class="nav-link">{translations[lang].about}</a></li>
+      <li><a href="#projects" class="nav-link">{translations[lang].projects}</a></li>
+      <li><a href="#skills" class="nav-link">{translations[lang].skills}</a></li>
+      <li><a href="#contact" class="nav-link">{translations[lang].contact}</a></li>
     </ul>
     
     <!-- CTA Button -->
     <div class="nav-cta">
-      <a href="#footer" class="cta-button" >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-        </svg>
-        Hire Me
-      </a>
+      <button
+        class="border-0 lang-switch-btn"
+        on:click={() => lang = lang === 'EN' ? 'FA' : 'EN'}
+      >
+        <i class="bi bi-translate me-2" style="font-size:1.2rem;"></i>
+        {lang === 'EN' ? 'EN' : 'FA'}
+      </button>
     </div>
 
     <!-- Mobile Menu Button -->
     <button class="mobile-menu-btn" on:click={toggleMenu} aria-label="Toggle menu">
-      <span class="hamburger" class:active={isMenuOpen}></span>
+      {#if isMenuOpen}
+        <i class="bi bi-x" style="font-size: 2rem;color: white"></i>
+      {:else}
+        <i class="bi bi-list" style="font-size: 2rem;color: white"></i>
+      {/if}
     </button>
   </nav>
 
@@ -208,39 +275,38 @@
     <div class="hero-content">
       <div class="hero-text">
         <div class="greeting">
-          <span class="greeting-text">Hello, I'm</span>
+          <span class="greeting-text">{translations[lang].greeting}</span>
           <div class="greeting-animation">
             <span class="wave">👋</span>
           </div>
         </div>
         
         <h1 class="hero-title">
-          <span class="name-highlight">John Developer</span>
+          <span class="name-highlight" class:farsi-font={lang === 'FA'}>{lang === 'FA' ? 'پارسا دولوپر' : 'Parsa Developer'}</span>
           <br>
-          <span class="role-text">
+          <span class="role-text" class:farsi-font={lang === 'FA'}>
             {typedText}<span class="cursor" class:visible={showCursor}>|</span>
           </span>
         </h1>
         
         <p class="hero-description">
-          I create beautiful, functional, and user-centered digital experiences. 
-          Passionate about turning ideas into reality through clean code and innovative design.
+          {translations[lang].description}
         </p>
         
         <div class="hero-stats">
           <div class="stat-item">
             <span class="stat-number">50+</span>
-            <span class="stat-label">Projects</span>
+            <span class="stat-label">{translations[lang].projectsStat}</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
             <span class="stat-number">3+</span>
-            <span class="stat-label">Years Experience</span>
+            <span class="stat-label">{translations[lang].yearsStat}</span>
           </div>
           <div class="stat-divider"></div>
           <div class="stat-item">
             <span class="stat-number">100%</span>
-            <span class="stat-label">Client Satisfaction</span>
+            <span class="stat-label">{translations[lang].satisfactionStat}</span>
           </div>
         </div>
         
@@ -249,13 +315,13 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z"/>
             </svg>
-            View My Work
+            {translations[lang].viewWork}
           </a>
           <a href="#footer" class="cta-secondary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
               <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
             </svg>
-            Get In Touch
+            {translations[lang].getInTouch}
           </a>
         </div>
       </div>
@@ -267,7 +333,7 @@
           <div class="profile-ring ring-2"></div>
           <div class="profile-ring ring-3"></div>
           <div class="profile-image">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face" alt="Profile" />
+            <img src="https://i.pinimg.com/736x/89/1c/e8/891ce88cac43afadd7da91fb409a4cb3.jpg" alt="Profile" />
           </div>
           
           <!-- Tech Icons -->
@@ -296,7 +362,7 @@
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div class="scroll-indicator" on:click={scrollToExplor}>
-      <div class="scroll-text">Scroll to explore</div>
+      <div class="scroll-text">{translations[lang].scroll}</div>
       <div class="scroll-arrow">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
@@ -312,14 +378,14 @@
         <div class="project-card">
           <img class="project-image" src={projectImages[project.id]} alt=" ">
           <div class="project-content">
-            <h3 class="project-title">{project.title.rendered}</h3>
-            <p class="project-description">{project.acf.project_description}</p>
+            <h3 class="project-title">{lang === 'FA' ? project.acf.title_fa : project.title.rendered}</h3>
+            <p class="project-description">{lang === 'FA' ? project.acf.project_description_fa : project.acf.project_description}</p>
             <div class="technologies">
               {#each project.acf.technologies_used.split(",") as tech}
                 <span class="tech-tag">{tech}</span>
               {/each}
             </div>
-            <a href={project.acf.url} class="project-link" target="_blank" rel="noopener noreferrer">View Project</a>
+            <a href={project.acf.url} class="project-link" target="_blank" rel="noopener noreferrer">{lang === 'FA' ? 'مشاهده پروژه' : 'View Project'}</a>
           </div>
         </div>
       {/each}
@@ -331,10 +397,9 @@
     <div class="footer-content">
       <!-- About Section -->
       <div class="footer-section">
-        <h4 class="footer-title">About</h4>
+        <h4 class="footer-title">{lang === 'FA' ? 'درباره' : 'About'}</h4>
         <p class="footer-text">
-          Passionate developer crafting innovative digital experiences with cutting-edge technologies. 
-          Always learning, always building.
+          {lang === 'FA' ? 'توسعه‌دهنده‌ای پرشور که با فناوری‌های روز تجربه‌های دیجیتال نوآورانه می‌سازد. همیشه در حال یادگیری و ساختن.' : 'Passionate developer crafting innovative digital experiences with cutting-edge technologies. Always learning, always building.'}
         </p>
         <div class="social-links">
           <a href="https://github.com" class="social-link" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
@@ -362,19 +427,19 @@
 
       <!-- Quick Links -->
       <div class="footer-section">
-        <h4 class="footer-title">Quick Links</h4>
+        <h4 class="footer-title">{lang === 'FA' ? 'لینک‌های سریع' : 'Quick Links'}</h4>
         <ul class="footer-links">
-          <li><a href="#home" class="footer-link">Home</a></li>
-          <li><a href="#projects" class="footer-link">Projects</a></li>
-          <li><a href="#about" class="footer-link">About</a></li>
-          <li><a href="#contact" class="footer-link">Contact</a></li>
-          <li><a href="#resume" class="footer-link">Resume</a></li>
+          <li><a href="#home" class="footer-link">{lang === 'FA' ? 'خانه' : 'Home'}</a></li>
+          <li><a href="#projects" class="footer-link">{lang === 'FA' ? 'پروژه‌ها' : 'Projects'}</a></li>
+          <li><a href="#about" class="footer-link">{lang === 'FA' ? 'درباره' : 'About'}</a></li>
+          <li><a href="#contact" class="footer-link">{lang === 'FA' ? 'تماس' : 'Contact'}</a></li>
+          <li><a href="#resume" class="footer-link">{lang === 'FA' ? 'رزومه' : 'Resume'}</a></li>
         </ul>
       </div>
 
       <!-- Technologies -->
       <div class="footer-section">
-        <h4 class="footer-title">Technologies</h4>
+        <h4 class="footer-title">{lang === 'FA' ? 'تکنولوژی‌ها' : 'Technologies'}</h4>
         <div class="tech-cloud">
           <span class="tech-item">JavaScript</span>
           <span class="tech-item">React</span>
@@ -387,15 +452,15 @@
 
       <!-- Contact Info -->
       <div class="footer-section">
-        <h4 class="footer-title">Get In Touch</h4>
+        <h4 class="footer-title">{lang === 'FA' ? 'ارتباط با من' : 'Get In Touch'}</h4>
         <p class="footer-text">
-          Ready to collaborate on your next project? Let's create something amazing together.
+          {lang === 'FA' ? 'آماده همکاری در پروژه بعدی شما هستم. بیایید با هم چیزی شگفت‌انگیز بسازیم.' : "Ready to collaborate on your next project? Let's create something amazing together."}
         </p>
         <a href="mailto:your.email@example.com" class="contact-button">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
           </svg>
-          Contact Me
+          {lang === 'FA' ? 'ارتباط با من' : 'Contact Me'}
         </a>
       </div>
     </div>
@@ -404,11 +469,11 @@
     <div class="footer-bottom">
       <div class="footer-bottom-content">
         <p class="copyright">
-          © {new Date().getFullYear()} Your Name. All rights reserved.
+          © {new Date().getFullYear()} {lang === 'FA' ? 'تمام حقوق برای پارسا محفوظ است.' : 'Your Name. All rights reserved.'}
         </p>
         <div class="footer-bottom-links">
-          <a href="#privacy" class="footer-bottom-link">Privacy Policy</a>
-          <a href="#terms" class="footer-bottom-link">Terms of Service</a>
+          <a href="#privacy" class="footer-bottom-link">{lang === 'FA' ? 'حریم خصوصی' : 'Privacy Policy'}</a>
+          <a href="#terms" class="footer-bottom-link">{lang === 'FA' ? 'شرایط استفاده' : 'Terms of Service'}</a>
         </div>
       </div>
     </div>
@@ -505,7 +570,7 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #ffffff87;
     transition: width 0.3s ease;
   }
 
@@ -523,24 +588,24 @@
     flex-shrink: 0;
   }
 
-  .cta-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    text-decoration: none;
-    padding: 12px 24px;
-    border-radius: 12px;
+  .lang-switch-btn {
+    border-radius: 2rem;
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    letter-spacing: 1px;
+    padding: 0.5rem 1.2rem;
+    display: flex;
+    align-items: center;
+    background: #667eea;
+    color: #fff;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    cursor: pointer;
   }
 
-  .cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+  .lang-switch-btn:hover, .lang-switch-btn:focus {
+    background: #5042be;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   }
 
   /* Mobile Menu Button */
@@ -556,47 +621,6 @@
 
   .mobile-menu-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-  }
-
-  .hamburger {
-    display: block;
-    width: 25px;
-    height: 2px;
-    background: white;
-    position: relative;
-    transition: all 0.3s ease;
-  }
-
-  .hamburger::before,
-  .hamburger::after {
-    content: '';
-    position: absolute;
-    width: 25px;
-    height: 2px;
-    background: white;
-    transition: all 0.3s ease;
-  }
-
-  .hamburger::before {
-    top: -8px;
-  }
-
-  .hamburger::after {
-    bottom: -8px;
-  }
-
-  .hamburger.active {
-    background: transparent;
-  }
-
-  .hamburger.active::before {
-    transform: rotate(45deg);
-    top: 0;
-  }
-
-  .hamburger.active::after {
-    transform: rotate(-45deg);
-    bottom: 0;
   }
 
   /* Mobile Navigation */
@@ -1231,7 +1255,7 @@
   }
 
   .project-card {
-    background: rgba(255, 255, 255, 0.773);
+    background: rgba(255, 255, 255, 0.903);
     border-color: rgba(255, 255, 255, 0.508);
 
     border-radius: 20px;
@@ -1420,6 +1444,8 @@
   }
 
   .footer-links {
+    display: flex;
+    flex-direction: column;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -1542,5 +1568,39 @@
     .social-links {
       justify-content: center;
     }
+
+    .footer-links {
+      flex-direction: row;
+      gap: 15px;
+    }
+  }
+
+  /* Footer link underline animation */
+  .footer-link, .footer-bottom-link {
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  /* Social icon hover pulse */
+  .social-link, .mobile-social-link {
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .social-link:hover, .mobile-social-link:hover {
+    transform: scale(1.15) rotate(-8deg);
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+  }
+
+  .rtl-mode {
+    direction: rtl;
+  }
+
+  .farsi-font {
+    font-family: 'B titr', 'Vazir', 'IRANSans', Tahoma, Arial, sans-serif;
+    letter-spacing: 0;
+  }
+
+  .ltr-header, .ltr-header * {
+    direction: ltr !important;
+    text-align: left;
   }
 </style>
