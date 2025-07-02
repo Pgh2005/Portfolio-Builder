@@ -1337,6 +1337,8 @@
     font-weight: 600;
     transition: all 0.3s ease;
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    position: relative;
+    bottom: 0px;
   }
 
   .project-link:hover {
