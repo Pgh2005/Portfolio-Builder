@@ -268,6 +268,139 @@ if ( ! function_exists( 'hello_elementor_body_open' ) ) {
 	}
 }
 
+// plugin for ai generator description --------------------------------------------------------------------
+
+// add button to generate description with ai below project_description field in acf
+add_action('acf/render_field/name=project_description', 'add_ai_button_to_acf_field');
+function add_ai_button_to_acf_field($field) {
+    // add custom style to button
+    $button_style = 'margin-top: 10px; cursor: pointer;';
+
+    echo '<button type="button" id="generate-ai-description-btn" class="button button-primary" style="' . $button_style . '">✨ تولید توضیحات با هوش مصنوعی</button>';
+	// add a empty space to show loading status
+    echo '<p id="ai-status" style="display:none; color:#555; font-style:italic;"></p>';
+}
+
+// 
+
+// load scripts for ai generator button
+add_action('admin_enqueue_scripts', 'load_ai_generator_scripts');
+function load_ai_generator_scripts($hook) {
+    // فقط در صفحات ویرایش و افزودن پست جدید اجرا شود
+    if ('post.php' != $hook && 'post-new.php' != $hook) {
+        return;
+    }
+
+    // مطمئن می‌شویم که در پست تایپ "project" هستیم
+    // global $post;
+    // if ('project' != $post->post_type) {
+    //     return;
+    // }
+
+    // فایل جاوااسکریپت را ثبت و بارگذاری می‌کنیم
+	// TODO: add ai-generator.js to the theme
+    wp_enqueue_script('ai-generator', get_template_directory_uri() . '/js/ai-generator.js', array('jquery'), '1.0', true);
+
+    // ارسال متغیرهای لازم از PHP به JavaScript (مانند nonce برای امنیت)
+    wp_localize_script('ai-generator', 'ai_generator_params', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce'    => wp_create_nonce('ai_generator_nonce')
+    ));
+}
+
+// 
+
+// handle ajax request for generate project description with ai
+add_action('wp_ajax_generate_project_description_ai', 'handle_ai_generation_request');
+
+function handle_ai_generation_request() {
+    // بخش‌های اولیه بدون تغییر
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ai_generator_nonce')) {
+        wp_send_json_error('Nonce نامعتبر است');
+        return;
+    }
+    // عنوان پروژه را دیگر نیاز نداریم چون پرامپت ثابت است
+    // $project_title = ...
+
+    $api_key = defined('GEMINI_API_KEY') ? GEMINI_API_KEY : '';
+    if (empty($api_key)) {
+        wp_send_json_error('کلید API برای Gemini تعریف نشده است');
+        return;
+    }
+
+    // ==================> پیاده‌سازی دقیق بر اساس curl <==================
+
+    $model_name = 'gemini-2.0-flash';
+    $api_url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_name}:generateContent";
+
+	$prompt = "Act as a professional copywriter. Write a compelling and comprehensive multi-paragraph description for a project_titled '{$project_title}'. The description should introduce the project, its main goals, and its benefits for the target audience. The tone should be formal and persuasive. IMPORTANT: Provide the final answer in the project titled language. #IMPORT the respose language be same as project_Title .this is project_title '$project_title'";
+
+
+
+	// $prompt2 = "You are a professional and creative copywriter. Your task is to write a compelling and comprehensive multi-paragraph description for a project. The description should introduce the project, its key goals, and its main benefits for the users or clients. The tone should be formal and persuasive.`{$project_title}`."
+
+
+	// request body structure
+    $body = [
+        'contents' => [
+            ['parts' => [['text' => $prompt]]]
+        ]
+    ];
+
+    $args = [
+        'body'        => json_encode($body),
+        'headers'     => [
+            'Content-Type'   => 'application/json',
+            'x-goog-api-key' => $api_key,
+        ],
+        'timeout'     => 60,
+    ];
+
+    // =========================================================================
+
+    // ارسال درخواست و پردازش پاسخ (بخش دیباگ همچنان فعال است)
+    $response = wp_remote_post($api_url, $args);
+
+    if (is_wp_error($response)) {
+        wp_send_json_error('خطا در ارتباط با Gemini API: ' . $response->get_error_message());
+        return;
+    }
+
+    $response_body = json_decode(wp_remote_retrieve_body($response), true);
+
+    if (empty($response_body)) {
+        $raw_body = wp_remote_retrieve_body($response);
+        wp_send_json_error('پاسخ خالی یا با فرمت نامعتبر از Gemini دریافت شد. بدنه پاسخ: ' . esc_html($raw_body));
+        return;
+    }
+    
+    if (isset($response_body['candidates'][0]['content']['parts'][0]['text'])) {
+        $generated_text = trim($response_body['candidates'][0]['content']['parts'][0]['text']);
+        wp_send_json_success($generated_text);
+    } 
+    elseif (isset($response_body['error']['message'])) {
+        wp_send_json_error('خطا از Gemini API: ' . $response_body['error']['message']);
+    }
+    else {
+        wp_send_json_error('پاسخ نامشخص از Gemini API دریافت شد. پاسخ خام: ' . json_encode($response_body, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+}
+
+
+
+
+
+
+
+// plugin for ai generator description (end) --------------------------------------------------------------
+
+
+
+
 require HELLO_THEME_PATH . '/theme.php';
 
 HelloTheme\Theme::instance();
+
+
+
+

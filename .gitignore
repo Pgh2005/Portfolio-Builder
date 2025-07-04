@@ -1,13 +1,56 @@
+# Wordpress 
+
+# Ignore WordPress core files and directories
 /portfolio-builder/wp-admin/
 /portfolio-builder/wp-includes/
 /portfolio-builder/wp-content/plugins/akismet/
 /portfolio-builder/wp-content/plugins/hello.php
 /portfolio-builder/wp-content/uploads/
+/portfolio-builder/wp-content/cache/
+
+# Ignore all plugins and themes by default
+/portfolio-builder/wp-content/plugins/
+/portfolio-builder/wp-content/themes/
+
+# Allow your custom theme(s) and plugin(s)
+!portfolio-builder/wp-content/themes/hello-elementor/**
+!portfolio-builder/wp-content/plugins/advanced-custom-fields/**
+!portfolio-builder/wp-content/plugins/polylang/**
+
+# Ignore sensitive files
 /portfolio-builder/wp-config.php
 /portfolio-builder/.htaccess
 /portfolio-builder/error_log
 /portfolio-builder/index.php
 
-# Allow custom theme/plugin
-!portfolio-builder/wp-content/themes/hello-elementor/**
-!portfolio-builder/wp-content/plugins/advanced-custom-fields/**
+
+# svelte app
+
+# dependencies
+/svelte-app/node_modules/
+
+# build output
+/svelte-app/build/
+/svelte-app/.svelte-kit/
+/svelte-app/dist/
+
+# local env files
+/svelte-app/.env
+/svelte-app/.env.*
+
+# logs
+/svelte-app/npm-debug.log*
+/svelte-app/yarn-debug.log*
+/svelte-app/yarn-error.log*
+
+# SvelteKit preview output
+/svelte-app/.vercel/
+svelte-app/.netlify/
+
+# IDE/editor settings
+/svelte-app/.vscode/
+svelte-app/.idea/
+
+# OS generated files
+/svelte-app/.DS_Store
+/svelte-app/Thumbs.db
