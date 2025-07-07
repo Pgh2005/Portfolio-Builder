@@ -3,6 +3,7 @@
 	const projects = data.projects;
 
 	let projectImages: Record<number, string> = {};
+	let imageLoaded: Record<number, boolean> = {};
 
 	import { onMount } from 'svelte';
 
@@ -87,11 +88,12 @@
 					}, pauseTime);
 				}
 			} else {
-				if (currentCharIndex > 0) {
+				if (currentCharIndex > 1) {
 					typedText = currentRole.slice(0, currentCharIndex - 1);
 					currentCharIndex--;
 					setTimeout(typeAnimation, deleteSpeed);
 				} else {
+					typedText = '\0';
 					isDeleting = false;
 					currentRoleIndex = (currentRoleIndex + 1) % roles.length;
 					setTimeout(typeAnimation, typeSpeed);
@@ -420,7 +422,18 @@
 		{#each projects as project}
 			{#if lang === 'FA' && project.class_list[5] == 'category-fa'}
 				<div class="project-card">
-					<img class="project-image" src={projectImages[project.id]} alt=" " />
+					{#if !imageLoaded[project.id]}
+						<div class="image-loader">
+							<div class="spinner"></div>
+						</div>
+					{/if}
+					<img
+						class="project-image"
+						src={projectImages[project.id]}
+						alt=" "
+						style="display: {imageLoaded[project.id] ? 'block' : 'none'}"
+						on:load={() => (imageLoaded[project.id] = true)}
+					/>
 					<div class="project-content">
 						<div class="project-title-box">
 							<h3 class="project-title">{project.title.rendered}</h3>
@@ -440,7 +453,18 @@
 				</div>
 			{:else if lang === 'EN' && project.class_list[5] == 'category-en'}
 				<div class="project-card">
-					<img class="project-image" src={projectImages[project.id]} alt=" " />
+					{#if !imageLoaded[project.id]}
+						<div class="image-loader">
+							<div class="spinner"></div>
+						</div>
+					{/if}
+					<img
+						class="project-image"
+						src={projectImages[project.id]}
+						alt=" "
+						style="display: {imageLoaded[project.id] ? 'block' : 'none'}"
+						on:load={() => (imageLoaded[project.id] = true)}
+					/>
 					<div class="project-content">
 						<div class="project-title-box">
 							<h3 class="project-title">{project.title.rendered}</h3>
@@ -701,7 +725,7 @@
 	}
 
 	.lang-switch-btn {
-		border-radius: 2rem;
+		border-radius: 15px;
 		font-weight: 600;
 		letter-spacing: 1px;
 		padding: 0.5rem 1.2rem;
@@ -715,12 +739,13 @@
 			box-shadow 0.2s;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 		cursor: pointer;
+		border: 3px solid #768beb;
 	}
 
-	.lang-switch-btn:hover,
-	.lang-switch-btn:focus {
-		background: #5042be;
+	.lang-switch-btn:hover {
+		background: #5d4be2bd;
 		color: #fff;
+		border: 3px solid #8274ea;
 		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 	}
 
@@ -1800,5 +1825,35 @@
 	.ltr-header * {
 		direction: ltr !important;
 		text-align: left;
+	}
+
+	.image-loader {
+		width: 100%;
+		height: 200px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #f3f3f3;
+		color: #888;
+		font-size: 1.2rem;
+		border-radius: 1rem 1rem 0 0;
+		margin-bottom: 0.5rem;
+	}
+
+	.spinner {
+		width: 40px;
+		height: 40px;
+		border: 4px solid #e0e0e0;
+		border-top: 4px solid #a067da;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+	}
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 </style>

@@ -334,16 +334,32 @@ function handle_ai_generation_request() {
     $api_url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_name}:generateContent";
 
 	$prompt = "Act as a professional copywriter. Write a compelling and comprehensive multi-paragraph description for a project_titled '{$project_title}'. The description should introduce the project, its main goals, and its benefits for the target audience. The tone should be formal and persuasive. IMPORTANT: Provide the final answer in the project titled language. #IMPORT the respose language be same as project_Title .this is project_title '$project_title'";
+	
 
+	$prompt2 = "You are an expert technology copywriter and strategist. Given a project title, generate a JSON object with the following keys, all based on the project title and in the same language as the project title:\n\n- project_description: A compelling, multi-paragraph description introducing the project, its main goals, and its benefits for the target audience.\n- technologies_used: An array of plausible, modern technologies relevant to the project (e.g., Frontend, Backend, Database, AI/ML, Mobile, Deployment).\n- image_suggestion: A detailed prompt for an AI image generator, visually representing the project's core theme, style, color palette, and key elements.\n- blog_content: A long, engaging blog post in Markdown format, with sections for introduction, key features, benefits, and a conclusion or call to action. Use relevant emojis as stickers throughout.\n\nInput project_title: '{$project_title}'\n\nRespond ONLY with a valid JSON object containing these keys.";
+	
+	$prompt3 = "You are an expert technology copywriter and strategist.\n\nFirst, automatically detect the language of the provided project_title. All response data must be in the same detected language (just english or persian).\n\nGiven a project title, generate a JSON object with the following keys, all based on the project title:\n\n- project_description: A compelling, multi-paragraph description introducing the project, its main goals, and its benefits for the target audience.\n- technologies_used: An array of plausible, modern technologies relevant to the project (e.g., Frontend, Backend, Database, AI/ML, Mobile, Deployment).\n- image_suggestion: A detailed prompt for an AI image generator, visually representing the project's core theme, style, color palette, and key elements.\n- blog_content: A long, engaging blog post in Markdown format, with sections for introduction, key features, benefits, and a conclusion or call to action. Use relevant emojis as stickers throughout.\n\nInput project_title: '{$project_title}'\n\nRespond ONLY with a valid JSON object containing these keys.";
 
+	$project_title_str = $project_title;
 
-	// $prompt2 = "You are a professional and creative copywriter. Your task is to write a compelling and comprehensive multi-paragraph description for a project. The description should introduce the project, its key goals, and its main benefits for the users or clients. The tone should be formal and persuasive.`{$project_title}`."
-
+	$prompt4 = 	"You are an expert technology copywriter and strategist.\n\n
+	First, automatically detect the language of the provided project_title. 
+	All response data must be in the same detected language (just english or persian).\n\n
+	Given a project title, generate a JSON object with the following keys, all based on the project title:\n\n
+	- project_description: A compelling, multi-paragraph description introducing the project, its main goals, 
+	and its benefits for the target audience.\n- technologies_used: An array of plausible, 
+	modern technologies relevant to the project (e.g., Frontend, Backend, Database, AI/ML, Mobile, Deployment).\n
+	- image_suggestion: A detailed prompt for an AI image generator, visually representing the project's core theme, style, color palette, and key elements.\n
+	- blog_content: A long, engaging blog post in Markdown format, with sections for introduction, key features, benefits, and a conclusion or call to action.
+	 Use relevant emojis as stickers throughout.\n\nExample:\nProject Title: \"Smart Home Automation System\"\n
+	 [Expected JSON output for this example]\n\nNow, for the following project title:\n
+	 Project Title: \"$project_title_str\"\n\nRespond ONLY with a valid JSON object containing these keys.";
+	
 
 	// request body structure
     $body = [
         'contents' => [
-            ['parts' => [['text' => $prompt]]]
+            ['parts' => [['text' => $prompt4]]]
         ]
     ];
 
@@ -385,11 +401,6 @@ function handle_ai_generation_request() {
         wp_send_json_error('پاسخ نامشخص از Gemini API دریافت شد. پاسخ خام: ' . json_encode($response_body, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
     }
 }
-
-
-
-
-
 
 
 // plugin for ai generator description (end) --------------------------------------------------------------
