@@ -1,11 +1,11 @@
 # 🧙‍♂️✨ The Magical Portfolio Builder ✨🧙‍♀️
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![WordPress](https://img.shields.io/badge/WordPress-21759B?logo=wordpress&logoColor=white)](https://wordpress.org/)
 [![Svelte](https://img.shields.io/badge/Svelte-4A4A55?logo=svelte&logoColor=FF3E00)](https://svelte.dev/)
-[![AI-Powered](https://img.shields.io/badge/AI-Powered-9cf)](https://github.com)
 
 **Transform your creative work into a stunning, AI-enhanced portfolio that speaks multiple languages and captivates visitors across all devices.**
+
+![Portfolio Preview](./svelte-app/static/Protfolio-builder.png)
 
 ---
 
