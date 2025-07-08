@@ -7,6 +7,7 @@
 /portfolio-builder/wp-content/plugins/hello.php
 /portfolio-builder/wp-content/uploads/
 /portfolio-builder/wp-content/cache/
+/portfolio-builder/wp-/wp-backups/
 
 # Ignore all plugins and themes by default
 /portfolio-builder/wp-content/plugins/
