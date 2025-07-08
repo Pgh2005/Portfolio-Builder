@@ -430,7 +430,7 @@
 					<img
 						class="project-image"
 						src={projectImages[project.id]}
-						alt=" "
+						alt={project.title.rendered}
 						style="display: {imageLoaded[project.id] ? 'block' : 'none'}"
 						on:load={() => (imageLoaded[project.id] = true)}
 					/>
@@ -1501,10 +1501,9 @@
 	.project-description {
 		color: #718096;
 		line-height: 1.7;
-		margin-bottom: 25px;
 		font-size: 1rem;
-		/* min-height: 150px;
-		max-height: 150px; */
+		min-height: 140px;
+		max-height: 140px;
 	}
 
 	.technologies {
@@ -1517,7 +1516,6 @@
 	}
 
 	.tech-tag {
-		/* background: rgba(239, 239, 239, 0.167); */
 		background: rgba(109, 90, 254, 0.455);
 		color: white;
 		padding: 6px 14px;
