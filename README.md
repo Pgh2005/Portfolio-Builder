@@ -17,16 +17,12 @@ This isn't just another portfolio template .it's a complete ecosystem that combi
 
 - **🤖 AI-Powered Content Generation**: Automatically generate compelling descriptions for your projects in English and Persian
 - **🌐 Bilingual Support**: Native multi-language capabilities for global reach
-- **📱 Ultra-Responsive Design**: Stunning presentation across desktop and mobile devices
+- **📱 Responsive Design**: Stunning presentation across desktop and mobile devices
 - **⚡ Lightning-Fast Performance**: Built with Svelte for optimal speed and user experience
 - **🎨 WordPress Integration**: Familiar content management with advanced customization
 - **🔧 Developer-Friendly**: Clean, maintainable code architecture with modern tooling
 
 ---
-
-## 🚀 Live Demo
-
-[GitHub Repository](https://github.com/Pgh2005/Portfolio-Builder)
 
 ## 🏗️ Architecture Overview
 
@@ -81,7 +77,7 @@ Intelligent content generation system:
 | **Frontend** | Svelte + SvelteKit | Ultra-fast, reactive UI    |
 | **Backend**  | WordPress + PHP    | Content management & API   |
 | **AI**       | Gemini Integration | Content generation         |
-| **Styling**  | CSS + tailwind     | Responsive design          |
+| **Styling**  | CSS                | Responsive design          |
 | **Build**    | Vite               | Development & optimization |
 
 ---
@@ -144,19 +140,34 @@ Create your environment configuration:
 
 ```
 portfolio-builder/
-├── portfolio-builder/          # WordPress backend
-│   ├── themes/hello-elementor/ # Custom theme
-│   ├── languages/              # i18n files
-│   ├── uploads/               # Media assets
-│   └── wp-content/            # WordPress core
-├── svelte-app/                # Frontend application
+├── portfolio-builder                           # WordPress backend
+│   └── wp-content
+│       ├── themes/hello-elementor/             # Custom theme
+│       │          ├── js/
+│       │          │   └── ai-generator.js      # script for ai description generator
+│       │          └── functions.php            # ai description generator : start with this comment // plugin for ai generator description
+│       ├── languages/                          # i18n files
+│       ├── uploads/                            # Media assets
+│       ├── wp-content/                         # WordPress core
+│       └── plugins/
+│           ├─ advanced-custom-fields/          # acf for project fields
+│           ├─ ai-description-generator/        # ai plugin for generate descrioton for projects
+│           │  ├─ ai-description-generator.php
+│           │  └─ aigen-script.js
+│           ├─ polylang/                        # plugin for multi language
+│           └─ projects-count-shortcode/        # plugin for projects counter
+│              └─ projects-count-shortcode.php  #
+│
+├── svelte-app/                                 # Frontend application
 │   ├── src/
-│   │   ├── lib/              # Reusable components
-│   │   ├── routes/           # Page components
-│   │   └── app.html          # Main template
-│   ├── static/               # Static assets
-│   └── package.json          # Dependencies
-└── README.md                 # This file
+│   │   ├── lib/                                # Reusable components
+│   │   ├── routes/                             # Page components
+│   │   │   ├── +page.js                        # Function for get projects data
+│   │   │   └── +page.svelte                    # Home Page
+│   │   └── app.html                            # Main template
+│   ├── static/                                 # Static assets
+│   └── package.json                            # Dependencies
+└── README.md                                   # This file
 ```
 
 ---
