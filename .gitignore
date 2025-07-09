@@ -9,6 +9,7 @@
 
 # Ignore all plugins and themes by default
 /portfolio-builder/wp-content/plugins/
+/portfolio-builder/wp-content/plugins/hello.php
 /portfolio-builder/wp-content/themes/
 
 # Allow your custom theme(s) and plugin(s)
