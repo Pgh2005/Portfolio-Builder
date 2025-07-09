@@ -3,8 +3,6 @@
 # Ignore WordPress core files and directories
 /portfolio-builder/wp-admin/
 /portfolio-builder/wp-includes/
-/portfolio-builder/wp-content/plugins/akismet/
-/portfolio-builder/wp-content/plugins/hello.php
 /portfolio-builder/wp-content/uploads/
 /portfolio-builder/wp-content/cache/
 /portfolio-builder/wp-/wp-backups/
@@ -16,6 +14,8 @@
 # Allow your custom theme(s) and plugin(s)
 !portfolio-builder/wp-content/themes/hello-elementor/**
 !portfolio-builder/wp-content/plugins/advanced-custom-fields/**
+!portfolio-builder/wp-content/plugins/ai-description-generator/**
+!portfolio-builder/wp-content/plugins/projects-count-shortcode/**
 !portfolio-builder/wp-content/plugins/polylang/**
 
 # Ignore sensitive files
@@ -23,7 +23,6 @@
 /portfolio-builder/.htaccess
 /portfolio-builder/error_log
 /portfolio-builder/index.php
-
 
 # svelte app
 
