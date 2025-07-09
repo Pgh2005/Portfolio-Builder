@@ -268,7 +268,7 @@ if ( ! function_exists( 'hello_elementor_body_open' ) ) {
 	}
 }
 
-// plugin for ai generator description --------------------------------------------------------------------
+// plugin for ai description generator 
 
 // add button to generate description with ai below project_description field in acf
 add_action('acf/render_field/name=project_description', 'add_ai_button_to_acf_field');
